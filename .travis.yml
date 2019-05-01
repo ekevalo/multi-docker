@@ -1,0 +1,29 @@
+sudo: required
+
+services: 
+  - docker
+
+before_install:
+  - docker build -t ekevalo/react-test -f ./client/Dockerfile.dev
+
+script:
+  - docker run -e CI=true ekevalo/react-test npm run test -- --watchAll=false
+
+after_success:
+  - docker build -t ekevalo/multi-client ./client
+  - docker build -t ekevalo/multi-nginx ./nginx
+  - docker build -t ekevalo/multi-server ./server
+  - docker build -t ekevalo/multi-worker ./worker
+
+# Login to docker cli
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+# take images and push 
+
+  - docker push ekevalo/multi-client
+  - docker push ekevalo/multi-nginx
+  - docker push ekevalo/multi-server
+  - docker push ekevalo/multi-worker
+  - docker push ekevalo/react-test
+  
+
+
