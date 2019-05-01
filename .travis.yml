@@ -23,7 +23,6 @@ after_success:
   - docker push ekevalo/multi-nginx
   - docker push ekevalo/multi-server
   - docker push ekevalo/multi-worker
-  - docker push ekevalo/react-test
-  
+
 
 
